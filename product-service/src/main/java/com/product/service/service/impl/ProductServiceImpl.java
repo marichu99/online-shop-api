@@ -6,6 +6,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import com.product.service.entity.Product;
+import com.product.service.exception.ProductNotFoundException;
 import com.product.service.model.ProductCreateRequest;
 import com.product.service.model.ProductCreateResponse;
 import com.product.service.repository.ProductRepository;
@@ -41,10 +42,19 @@ public class ProductServiceImpl implements ProductService{
         return target;
 
     }
+    @Override
+    public ProductCreateResponse findById(Integer productId) {
+       var pr =  productRepository.findById(productId);
+       if(pr.isPresent()){
+        return mapToProductCreateResponse(pr.get());
+       }
+        throw new ProductNotFoundException("Product with id not found");
+    }
 
     @Override
     public List<ProductCreateResponse> findAll() {
        return productRepository.findAll().stream().map(this::mapToProductCreateResponse).toList();
       }
-    
+
+  
 }

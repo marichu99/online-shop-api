@@ -4,6 +4,7 @@ package com.product.service.controller;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,6 +38,17 @@ public class ProductController {
                 return resp;
     }
 
+    @GetMapping("/{productId}")
+    public GenericResponse<ProductCreateResponse> findById(@PathVariable(name = "productId")  Integer productId) {
+      ProductCreateResponse pr = (ProductCreateResponse) productService.findById(productId);
+       GenericResponse<ProductCreateResponse> resp = GenericResponse.<ProductCreateResponse>builder()
+                .success(true)
+                .msg("Data fetched Successfully")
+                .data(pr)
+                .build();
+                log.info("We returned : {}",pr);
+                return resp;
+    }
     @PostMapping
     public GenericResponse<ProductCreateResponse> createProduct(
             @RequestBody ProductCreateRequest productCreateRequest) {
