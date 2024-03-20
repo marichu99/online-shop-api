@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
 
 import com.product.order.entity.Order;
 import com.product.order.entity.OrderItem;
@@ -13,6 +14,7 @@ import com.product.order.model.OrderRequest;
 import com.product.order.repository.OrderRepository;
 import com.product.order.service.OrderService;
 
+@Service
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
 
