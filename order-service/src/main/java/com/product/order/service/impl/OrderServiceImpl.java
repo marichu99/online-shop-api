@@ -31,11 +31,11 @@ import reactor.core.publisher.Mono;
 @Service
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
 
-    public OrderServiceImpl(OrderRepository orderRepository, WebClient webClient) {
+    public OrderServiceImpl(OrderRepository orderRepository, WebClient.Builder webClientBuilder) {
         this.orderRepository = orderRepository;
-        this.webClient=webClient;
+        this.webClientBuilder=webClientBuilder;
     }
 
     @SuppressWarnings("unchecked")
@@ -52,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
         }
         log.info("productCodes",productCodes);       
         log.info("productQuantities",productQuantities);   
-        GenericResponse<?> response = webClient.get()
+        GenericResponse<?> response = webClientBuilder.build().get()
                 .uri("http://localhost:6002/api/inventory/check",
                         uriBuilder -> uriBuilder
                                 .queryParam("productCodes", productCodes)
