@@ -40,7 +40,7 @@ public class OrderServiceImpl implements OrderService {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void placeOrder(OrderRequest orderRequest) {
+    public String placeOrder(OrderRequest orderRequest) {
          Order order = new Order();
 
         List<String> productCodes = new ArrayList<>();
@@ -71,7 +71,6 @@ public class OrderServiceImpl implements OrderService {
             order.setOrderItems(orderItems);
             orderRepository.save(order);
         }else{
-           // ! throw an exception with the listing of the products that do have enough
             log.error("Not Enough stock");
             log.info("{}", response.getData());
             if(response.getData() instanceof Map){
@@ -79,6 +78,7 @@ public class OrderServiceImpl implements OrderService {
             }
             throw new OrderServiceException(response.getMsg());
         }
+        return order.getOrderNumber();
 
     }
 

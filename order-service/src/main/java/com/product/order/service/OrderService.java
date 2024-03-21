@@ -4,6 +4,6 @@ import com.product.order.model.OrderRequest;
 
 public interface OrderService {
 
-    void placeOrder(OrderRequest orderRequest);
+    String placeOrder(OrderRequest orderRequest);
     
 }
