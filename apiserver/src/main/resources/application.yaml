@@ -21,16 +21,7 @@ spring:
           predicates:
             - Path= /api/orders/**
         - id: inventory
-          uri: lb://api/inventory
-
-
-  
-eureka:
-  client:
-    enabled: true
-    fetch-registry: true
-    register-with-eureka: true
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-
+          uri: lb://INVENTORY-SERVICE
+          predicates:
+            - Path= /api/inventory/**
 
