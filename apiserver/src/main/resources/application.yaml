@@ -9,19 +9,23 @@ spring:
     gateway:
       routes:
         - id: products
-          uri: lb://PRODUCT-SERVICE
+          uri: lb://SERVICE
           predicates: 
             - Path=/api/products/**
         - id: hello
-          uri: lb://PRODUCT-SERVICE
+          uri: lb://SERVICE
           predicates: 
             - Path=/api/hello
         - id: order
-          uri: lb://ORDER-SERVICE
+          uri: lb://ORDER
           predicates:
             - Path= /api/orders/**
         - id: inventory
           uri: lb://INVENTORY-SERVICE
+          predicates:
+            - Path= /api/inventory/**
+        - id: payment
+          uri: lb://PAYMENT
           predicates:
             - Path= /api/inventory/**
 

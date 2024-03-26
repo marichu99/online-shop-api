@@ -3,14 +3,14 @@ server:
 spring:
   application:
     name: inventory-service
-  data:
-    mongodb:
-        host: localhost
-        port: 27017
-        database: inventorydb
-        username: root
-        password: generic
-        authentication-database: admin
+  # data:
+  #   mongodb:
+  #       host: localhost
+  #       port: 27017
+  #       database: inventorydb
+  #       username: root
+  #       password: generic
+  #       authentication-database: admin
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 
