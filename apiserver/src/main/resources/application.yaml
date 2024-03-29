@@ -28,4 +28,8 @@ spring:
           uri: lb://PAYMENT
           predicates:
             - Path= /api/inventory/**
+        - id: users
+          uri: lb://AUTHSERVICE
+          predicates:
+            - Path= /api/users/**
 

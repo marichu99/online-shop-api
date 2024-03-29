@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserRequestDTO {
     private String username;
+    private String email;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String password;
