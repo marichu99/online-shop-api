@@ -1,20 +1,40 @@
 package com.product.authservice.service.impl;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
 import com.product.authservice.entity.User;
+import com.product.authservice.model.UserRequestDTO;
+import com.product.authservice.repository.UserRepositoryI;
 import com.product.authservice.service.AuthServiceI;
 
+@Service
 public class AuthServiceImpl implements AuthServiceI {
 
-    @Override
-    public User login(User user) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'login'");
+    private final UserRepositoryI userRepository;
+
+    public AuthServiceImpl(UserRepositoryI userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
-    public boolean registerUser(User user, String password) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'registerUser'");
+    public User login(UserRequestDTO userRequest) {
+        User user = mapUserRequestToUser(userRequest);
+        return userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
     }
-    
+
+    private User mapUserRequestToUser(UserRequestDTO source) {
+        User target = new User();
+        BeanUtils.copyProperties(source, target);
+        return target;
+
+    }
+
+    @Override
+    public User registerUser(UserRequestDTO user) {
+        User userTobeSaved = new User();
+        BeanUtils.copyProperties(user, userTobeSaved);
+        return userRepository.save(userTobeSaved);
+    }
+
 }
