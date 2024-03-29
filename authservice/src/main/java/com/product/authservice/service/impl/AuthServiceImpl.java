@@ -8,21 +8,26 @@ import com.product.authservice.model.UserRequestDTO;
 import com.product.authservice.model.UserResponse;
 import com.product.authservice.repository.UserRepositoryI;
 import com.product.authservice.service.AuthServiceI;
+import com.product.authservice.utils.HashTextI;
 
 @Service
 public class AuthServiceImpl implements AuthServiceI {
 
     private final UserRepositoryI userRepository;
+    private final HashTextI hashText;
 
-    public AuthServiceImpl(UserRepositoryI userRepository) {
+    public AuthServiceImpl(UserRepositoryI userRepository, HashTextI hashText) {
         this.userRepository = userRepository;
+        this.hashText=hashText;
     }
 
     @Override
     public UserResponse login(UserRequestDTO userRequest) {
         User requestedUser = mapUserRequestToUser(userRequest);
-        User foundUser =userRepository.findByUsernameAndPassword(requestedUser.getUsername(), requestedUser.getPassword());
-        return mapUserToUserResponse(foundUser);
+        String hashedPassword = hashText.hash(requestedUser.getPassword());
+        System.out.println("The hashed password is "+hashedPassword);
+        UserResponse foundUser =userRepository.findByUsernameAndPassword(requestedUser.getUsername(), hashedPassword);
+        return foundUser;
     }
 
     private User mapUserRequestToUser(UserRequestDTO source) {
@@ -38,8 +43,9 @@ public class AuthServiceImpl implements AuthServiceI {
     }
 
     @Override
-    public UserResponse registerUser(UserRequestDTO user) {
-        var userTobeSaved = userRepository.save(mapUserRequestToUser(user));
+    public UserResponse registerUser(UserRequestDTO userRequestDTO) {
+        User userTobeSaved = mapUserRequestToUser(userRequestDTO);
+        userTobeSaved.setPassword(hashText.hash(userTobeSaved.getPassword()));
         return mapUserToUserResponse(userTobeSaved);
     }
 

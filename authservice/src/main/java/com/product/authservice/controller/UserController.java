@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequestMapping("api/users")
 public class UserController {
     private final AuthServiceI authService;
+    
 
     public UserController(AuthServiceI authService) {
         this.authService = authService;
