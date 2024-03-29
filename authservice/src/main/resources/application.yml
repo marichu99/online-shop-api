@@ -1,0 +1,14 @@
+server:
+  port: 6000
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/usersdb
+    username: root
+    password: root
+  application:
+    name: authservice
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
