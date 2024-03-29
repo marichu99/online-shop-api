@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.product.authservice.entity.User;
 import com.product.authservice.model.UserRequestDTO;
+import com.product.authservice.model.UserResponse;
 import com.product.authservice.repository.UserRepositoryI;
 import com.product.authservice.service.AuthServiceI;
 
@@ -18,23 +19,28 @@ public class AuthServiceImpl implements AuthServiceI {
     }
 
     @Override
-    public User login(UserRequestDTO userRequest) {
-        User user = mapUserRequestToUser(userRequest);
-        return userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
+    public UserResponse login(UserRequestDTO userRequest) {
+        User requestedUser = mapUserRequestToUser(userRequest);
+        User foundUser =userRepository.findByUsernameAndPassword(requestedUser.getUsername(), requestedUser.getPassword());
+        return mapUserToUserResponse(foundUser);
     }
 
     private User mapUserRequestToUser(UserRequestDTO source) {
         User target = new User();
         BeanUtils.copyProperties(source, target);
         return target;
+    }
 
+    private UserResponse mapUserToUserResponse(User source) {
+        UserResponse target = new UserResponse();
+        BeanUtils.copyProperties(source, target);
+        return target;
     }
 
     @Override
-    public User registerUser(UserRequestDTO user) {
-        User userTobeSaved = new User();
-        BeanUtils.copyProperties(user, userTobeSaved);
-        return userRepository.save(userTobeSaved);
+    public UserResponse registerUser(UserRequestDTO user) {
+        var userTobeSaved = userRepository.save(mapUserRequestToUser(user));
+        return mapUserToUserResponse(userTobeSaved);
     }
 
 }
