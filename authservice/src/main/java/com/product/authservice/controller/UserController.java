@@ -9,9 +9,11 @@ import com.product.authservice.service.AuthServiceI;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
+@CrossOrigin(origins =  "http://localhost:1841/") 
 @RequestMapping("api/users")
 public class UserController {
     private final AuthServiceI authService;
