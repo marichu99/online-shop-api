@@ -14,4 +14,7 @@ import lombok.NoArgsConstructor;
 public class ProductCreateRequest {
     private String name;
     private BigDecimal price;
+    private String category;
+    private Integer quantity;
+    private String imageUrl;
 }

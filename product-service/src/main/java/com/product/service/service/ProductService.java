@@ -12,5 +12,7 @@ public interface ProductService {
     List<ProductCreateResponse> findAll();
 
     ProductCreateResponse findById(Integer productId);
+
+    List<ProductCreateResponse> createProducts(List<ProductCreateRequest> productCreateRequests);
     
 }
