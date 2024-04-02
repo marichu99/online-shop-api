@@ -3,6 +3,7 @@ package com.product.service.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@RequestMapping("api/products")
 @RestController
+@CrossOrigin(origins =  "http://localhost:1841/") 
+@RequestMapping("api/products")
 @Slf4j
 public class ProductController {
     private final ProductService productService;
@@ -60,6 +62,26 @@ public class ProductController {
                 .data(pr)
                 .build();
                 log.info("We returned : {}",pr);
+        return resp;
+    }
+    @PostMapping("/seed")
+    public GenericResponse<List<ProductCreateResponse>> createProducts(
+            @RequestBody List<ProductCreateRequest> productCreateRequests) {
+        // Log the received requests
+        log.info("Received {} product creation requests", productCreateRequests.size());
+        
+        // Process each request and create products
+        List<ProductCreateResponse> responses = productService.createProducts(productCreateRequests);
+        
+        // Log the responses
+        log.info("Returned {} product creation responses", responses.size());
+        
+        // Build and return the response
+        GenericResponse<List<ProductCreateResponse>> resp = GenericResponse.<List<ProductCreateResponse>>builder()
+                .success(true)
+                .msg("Data saved Successfully")
+                .data(responses)
+                .build();
         return resp;
     }
 

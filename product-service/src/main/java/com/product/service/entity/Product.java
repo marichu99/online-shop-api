@@ -32,6 +32,15 @@ public class Product {
 
     @Column(name= "product_price")
     private BigDecimal price;
+
+    @Column(name= "product_category")
+    private String category;
+
+    @Column(name= "product_quantity")
+    private Integer quantity;
+
+    @Column(name= "image_url")
+    private String imageUrl;
     
 
 }
