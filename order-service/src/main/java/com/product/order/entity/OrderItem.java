@@ -25,6 +25,8 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+   /*  private Long productId; */
+
     @Column(name = "product_code")
     private String productCode;
     

@@ -17,4 +17,11 @@ public class ProductCreateResponse {
     private String category;
     private Integer quantity;
     private String imageUrl;
+
+      private Integer id;
+    // Other fields and getter methods...
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 }

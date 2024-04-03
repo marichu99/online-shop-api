@@ -50,3 +50,219 @@ Content-Type: application/json
     "name": "Electronics",
     "description": "Category for electronic devices"
 }
+## create product
+# @name placeorder
+POST  http://localhost:6060/api/products HTTP/1.1
+Content-Type: application/json
+
+[
+    {
+        "name": "Product 1",
+        "price": 10.99,
+        "category": "Electronics",
+        "quantity": 50,
+        "imageUrl": "https://example.com/product1.jpg"
+    },
+    {
+        "name": "Product 2",
+        "price": 20.49,
+        "category": "Clothing",
+        "quantity": 30,
+        "imageUrl": "https://example.com/product2.jpg"
+    },
+    {
+        "name": "Product 3",
+        "price": 5.99,
+        "category": "Home & Garden",
+        "quantity": 100,
+        "imageUrl": "https://example.com/product3.jpg"
+    },
+    {
+        "name": "Product 4",
+        "price": 15.79,
+        "category": "Sports",
+        "quantity": 20,
+        "imageUrl": "https://example.com/product4.jpg"
+    },
+    {
+        "name": "Product 5",
+        "price": 25.99,
+        "category": "Beauty",
+        "quantity": 40,
+        "imageUrl": "https://example.com/product5.jpg"
+    },
+    {
+        "name": "Product 6",
+        "price": 8.49,
+        "category": "Toys & Games",
+        "quantity": 60,
+        "imageUrl": "https://example.com/product6.jpg"
+    },
+    {
+        "name": "Product 7",
+        "price": 12.99,
+        "category": "Electronics",
+        "quantity": 70,
+        "imageUrl": "https://example.com/product7.jpg"
+    },
+    {
+        "name": "Product 8",
+        "price": 18.29,
+        "category": "Clothing",
+        "quantity": 80,
+        "imageUrl": "https://example.com/product8.jpg"
+    },
+    {
+        "name": "Product 9",
+        "price": 6.99,
+        "category": "Home & Garden",
+        "quantity": 90,
+        "imageUrl": "https://example.com/product9.jpg"
+    },
+    {
+        "name": "Product 10",
+        "price": 30.49,
+        "category": "Sports",
+        "quantity": 10,
+        "imageUrl": "https://example.com/product10.jpg"
+    },
+    {
+        "name": "Product 11",
+        "price": 22.99,
+        "category": "Beauty",
+        "quantity": 120,
+        "imageUrl": "https://example.com/product11.jpg"
+    },
+    {
+        "name": "Product 12",
+        "price": 11.49,
+        "category": "Toys & Games",
+        "quantity": 25,
+        "imageUrl": "https://example.com/product12.jpg"
+    },
+    {
+        "name": "Product 13",
+        "price": 17.99,
+        "category": "Electronics",
+        "quantity": 35,
+        "imageUrl": "https://example.com/product13.jpg"
+    },
+    {
+        "name": "Product 14",
+        "price": 24.79,
+        "category": "Clothing",
+        "quantity": 45,
+        "imageUrl": "https://example.com/product14.jpg"
+    },
+    {
+        "name": "Product 15",
+        "price": 9.99,
+        "category": "Home & Garden",
+        "quantity": 55,
+        "imageUrl": "https://example.com/product15.jpg"
+    },
+    {
+        "name": "Product 16",
+        "price": 29.99,
+        "category": "Sports",
+        "quantity": 65,
+        "imageUrl": "https://example.com/product16.jpg"
+    },
+    {
+        "name": "Product 17",
+        "price": 23.49,
+        "category": "Beauty",
+        "quantity": 75,
+        "imageUrl": "https://example.com/product17.jpg"
+    },
+    {
+        "name": "Product 18",
+        "price": 7.99,
+        "category": "Toys & Games",
+        "quantity": 85,
+        "imageUrl": "https://example.com/product18.jpg"
+    },
+    {
+        "name": "Product 19",
+        "price": 14.49,
+        "category": "Electronics",
+        "quantity": 95,
+        "imageUrl": "https://example.com/product19.jpg"
+    },
+    {
+        "name": "Product 20",
+        "price": 28.79,
+        "category": "Clothing",
+        "quantity": 105,
+        "imageUrl": "https://example.com/product20.jpg"
+    },
+    {
+        "name": "Product 21",
+        "price": 10.99,
+        "category": "Home & Garden",
+        "quantity": 115,
+        "imageUrl": "https://example.com/product21.jpg"
+    },
+    {
+        "name": "Product 22",
+        "price": 31.49,
+        "category": "Sports",
+        "quantity": 125,
+        "imageUrl": "https://example.com/product22.jpg"
+    },
+    {
+        "name": "Product 23",
+        "price": 26.99,
+        "category": "Beauty",
+        "quantity": 135,
+        "imageUrl": "https://example.com/product23.jpg"
+    },
+    {
+        "name": "Product 24",
+        "price": 13.49,
+        "category": "Toys & Games",
+        "quantity": 145,
+        "imageUrl": "https://example.com/product24.jpg"
+    },
+    {
+        "name": "Product 25",
+        "price": 19.99,
+        "category": "Electronics",
+        "quantity": 155,
+        "imageUrl": "https://example.com/product25.jpg"
+    },
+    {
+        "name": "Product 26",
+        "price": 33.79,
+        "category": "Clothing",
+        "quantity": 165,
+        "imageUrl": "https://example.com/product26.jpg"
+    },
+    {
+        "name": "Product 27",
+        "price": 11.99,
+        "category": "Home & Garden",
+        "quantity": 175,
+        "imageUrl": "https://example.com/product27.jpg"
+    },
+    {
+        "name": "Product 28",
+        "price": 36.49,
+        "category": "Sports",
+        "quantity": 185,
+        "imageUrl": "https://example.com/product28.jpg"
+    },
+    {
+        "name": "Product 29",
+        "price": 29.99,
+        "category": "Beauty",
+        "quantity": 195,
+        "imageUrl": "https://example.com/product29.jpg"
+    },
+    {
+        "name": "Product 30",
+        "price": 15.49,
+        "category": "Toys & Games",
+        "quantity": 205,
+        "imageUrl": "https://example.com/product30.jpg"}
+]

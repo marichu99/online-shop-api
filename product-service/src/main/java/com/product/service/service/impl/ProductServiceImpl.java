@@ -1,17 +1,24 @@
 package com.product.service.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.product.service.entity.Product;
 import com.product.service.exception.ProductNotFoundException;
+import com.product.service.model.GenericResponse;
 import com.product.service.model.ProductCreateRequest;
 import com.product.service.model.ProductCreateResponse;
 import com.product.service.repository.ProductRepository;
 import com.product.service.service.ProductService;
+
+import jakarta.ws.rs.NotFoundException;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -36,14 +43,7 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
-    @SuppressWarnings("null")
-    private ProductCreateResponse mapToProductCreateResponse(Product source) {
-        ProductCreateResponse target = new ProductCreateResponse();
-        BeanUtils.copyProperties(source, target);
-        return target;
-
-    }
-
+   
     @Override
     public ProductCreateResponse findById(Integer productId) {
         var pr = productRepository.findById(productId);
@@ -52,6 +52,8 @@ public class ProductServiceImpl implements ProductService {
         }
         throw new ProductNotFoundException("Product with id not found");
     }
+
+    
 
     @Override
     public List<ProductCreateResponse> findAll() {
@@ -63,5 +65,49 @@ public class ProductServiceImpl implements ProductService {
         return productCreateRequests.stream().map(this::mapToProductEntity).map(productRepository::save)
                 .map(this::mapToProductCreateResponse).collect(Collectors.toList());
     }
+    @Override
+    public ProductCreateResponse updateProduct(Integer productId, ProductCreateRequest updatedProductRequest) {
+        // Fetch the existing product by productId
+        Product existingProduct = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+
+        // Update the existing product with the data from updatedProductRequest
+        existingProduct.setName(updatedProductRequest.getName());
+        existingProduct.setPrice(updatedProductRequest.getPrice());
+        existingProduct.setCategory(updatedProductRequest.getCategory());
+        existingProduct.setImageUrl(updatedProductRequest.getImageUrl());
+        existingProduct.setQuantity(updatedProductRequest.getQuantity());
+
+        // Save the updated product
+        Product updatedProduct = productRepository.save(existingProduct);
+
+        // Convert the updated product to a response DTO and return
+        return mapToProductCreateResponse(updatedProduct);
+    }
+
+    // Helper method to map Product entity to ProductCreateResponse DTO
+    private ProductCreateResponse mapToProductCreateResponse(Product product) {
+        return ProductCreateResponse.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .price(product.getPrice())
+                .category(product.getCategory())
+                .quantity(product.getQuantity())
+                .imageUrl(product.getImageUrl())
+                .build();
+    }
+
+    @Override
+public void deleteProduct(Integer productId) {
+    // Fetch the existing product by productId
+    Product existingProduct = productRepository.findById(productId)
+            .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+
+    // Delete the product
+    productRepository.delete(existingProduct);
+}
+
+
+
 
 }
