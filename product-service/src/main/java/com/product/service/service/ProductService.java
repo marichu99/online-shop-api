@@ -13,6 +13,9 @@ public interface ProductService {
 
     ProductCreateResponse findById(Integer productId);
 
+    void addToCart(List<Integer> productList);
     List<ProductCreateResponse> createProducts(List<ProductCreateRequest> productCreateRequests);
+
+    // Boolean checkProduct(List<String> productCodes, List<Integer> productQuantities);
     
 }

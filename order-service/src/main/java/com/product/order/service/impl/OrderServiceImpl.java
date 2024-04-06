@@ -9,7 +9,9 @@ import java.util.UUID;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -35,34 +37,40 @@ public class OrderServiceImpl implements OrderService {
 
     public OrderServiceImpl(OrderRepository orderRepository, WebClient.Builder webClientBuilder) {
         this.orderRepository = orderRepository;
-        this.webClientBuilder=webClientBuilder;
+        this.webClientBuilder = webClientBuilder;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public String placeOrder(OrderRequest orderRequest) {
-         Order order = new Order();
+        Order order = new Order();
 
         List<String> productCodes = new ArrayList<>();
         List<Integer> productQuantities = new ArrayList<>();
 
+        System.out.println("The order request is ++++++" + orderRequest);
+
         for (OrderItemRequest orderItemRequest : orderRequest.getOrderItems()) {
+            System.out.println("The order Item request is ++++++" + orderItemRequest);
             productCodes.add(orderItemRequest.getProductCode());
             productQuantities.add(orderItemRequest.getQuantity());
         }
-        log.info("productCodes",productCodes);       
-        log.info("productQuantities",productQuantities);   
-        GenericResponse<?> response = webClientBuilder.build().get()
-                .uri("http://inventory-service/api/inventory/check",
-                        uriBuilder -> uriBuilder
-                                .queryParam("productCodes", productCodes)
-                                .queryParam("productQuantities", productQuantities)
-                                .build())
+        log.info("The orderequest is", orderRequest);
+        log.info("productCodes", productCodes);
+        System.out.println("The product codes are ......" + productCodes);
+        log.info("productQuantities", productQuantities);
+
+        GenericResponse<?> response = webClientBuilder.build().post()
+                .uri("http://localhost:6060/api/products/addToCart")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(productCodes))
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, clientResponse -> handleError(clientResponse))
                 .bodyToMono(new ParameterizedTypeReference<GenericResponse<?>>() {
                 })
                 .block();
+
+        log.info("The response is " + response);
         if (response.isSuccess()) {
             // stock
             order.setOrderNumber(UUID.randomUUID().toString());
@@ -70,11 +78,11 @@ public class OrderServiceImpl implements OrderService {
             var orderItems = orderRequest.getOrderItems().stream().map(this::mapToOrderItemEntity).toList();
             order.setOrderItems(orderItems);
             orderRepository.save(order);
-        }else{
+        } else {
             log.error("Not Enough stock");
             log.info("{}", response.getData());
-            if(response.getData() instanceof Map){
-                throw new NotEnoughQuantityException(response.getMsg(),(Map<String, Integer>) response.getData());
+            if (response.getData() instanceof Map) {
+                throw new NotEnoughQuantityException(response.getMsg(), (Map<String, Integer>) response.getData());
             }
             throw new OrderServiceException(response.getMsg());
         }
@@ -82,7 +90,7 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
-     private Mono<? extends Throwable> handleError(ClientResponse response) {
+    private Mono<? extends Throwable> handleError(ClientResponse response) {
         log.error("Client error received: {}", response.statusCode());
         return Mono.error(new InventoryServiceException("Error in inventory service"));
     }

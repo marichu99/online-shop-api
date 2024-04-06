@@ -64,4 +64,35 @@ public class ProductServiceImpl implements ProductService {
                 .map(this::mapToProductCreateResponse).collect(Collectors.toList());
     }
 
+
+
+    @Override
+    public void addToCart(List<Integer> productList) {
+         productRepository.updateCartStatusToCarted(productList);
+    }
+
+    // public Boolean checkProduct(List<String> productCodes, List<Integer> productQuantities) {
+    //     Map<String, Integer> unavailableItems = new HashMap<>();
+
+    //     for (int i = 0; i < productCodes.size(); i++) {
+    //         String productCode = productCodes.get(i);
+    //         Integer productQuantity = productQuantities.get(i);
+    //         Product product = productRepository.findByProductCode(productCode).orElse(null);
+    //         if (product != null) {
+    //             // check if enough
+    //             var dbInventory = product.getQuantity();
+    //             if (productQuantity > dbInventory) {
+    //                 unavailableItems.put(productCode, productQuantity - dbInventory);
+    //             }
+    //         } else {
+    //             unavailableItems.put(productCode, productQuantity);
+    //         }
+    //     }
+    //     if (unavailableItems.isEmpty()) {
+    //         return true;
+    //     } else {
+    //         throw new RuntimeException("Not Enough Quantity in Stock");
+    //     }
+    // }
+
 }
