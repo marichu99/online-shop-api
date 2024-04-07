@@ -20,8 +20,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping("placeOrder")
-    
+    @PostMapping("placeOrder")    
     public GenericResponse<String> placeOrder(@RequestBody OrderRequest orderRequest) {
         System.out.println("The request is +++++++"+orderRequest);
         orderService.placeOrder(orderRequest);

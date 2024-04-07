@@ -1,46 +1,43 @@
 package com.product.order.service.impl;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.google.gson.Gson;
 import com.product.order.entity.Order;
 import com.product.order.entity.OrderItem;
 import com.product.order.exception.InventoryServiceException;
-import com.product.order.exception.NotEnoughQuantityException;
-import com.product.order.exception.OrderServiceException;
-import com.product.order.model.GenericResponse;
 import com.product.order.model.OrderItemRequest;
 import com.product.order.model.OrderRequest;
 import com.product.order.repository.OrderRepository;
 import com.product.order.service.OrderService;
 
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import reactor.core.publisher.Mono;
 
 @Slf4j
 @Service
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
-    private final WebClient.Builder webClientBuilder;
 
     public OrderServiceImpl(OrderRepository orderRepository, WebClient.Builder webClientBuilder) {
         this.orderRepository = orderRepository;
-        this.webClientBuilder = webClientBuilder;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public String placeOrder(OrderRequest orderRequest) {
         Order order = new Order();
@@ -60,38 +57,51 @@ public class OrderServiceImpl implements OrderService {
         System.out.println("The product codes are ......" + productCodes);
         log.info("productQuantities", productQuantities);
 
-        GenericResponse<?> response = webClientBuilder.build().post()
-                .uri("http://localhost:6060/api/products/addToCart")
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(productCodes))
-                .retrieve()
-                .onStatus(HttpStatusCode::isError, clientResponse -> handleError(clientResponse))
-                .bodyToMono(new ParameterizedTypeReference<GenericResponse<?>>() {
-                })
-                .block();
+        // Convert productCodes to a map with key "productCodes"
+        Map<String, List<String>> requestBodyMap = Collections.singletonMap("productCodes", productCodes);
 
-        log.info("The response is " + response);
-        if (response.isSuccess()) {
-            // stock
-            order.setOrderNumber(UUID.randomUUID().toString());
-            order.setOrderTime(Instant.now());
-            var orderItems = orderRequest.getOrderItems().stream().map(this::mapToOrderItemEntity).toList();
-            order.setOrderItems(orderItems);
-            orderRepository.save(order);
-        } else {
-            log.error("Not Enough stock");
-            log.info("{}", response.getData());
-            if (response.getData() instanceof Map) {
-                throw new NotEnoughQuantityException(response.getMsg(), (Map<String, Integer>) response.getData());
+        // Convert the map to JSON format
+        String jsonRequestBody = new Gson().toJson(requestBodyMap);
+
+        // Set up OkHttpClient
+        OkHttpClient client = new OkHttpClient();
+
+        // Create request body with JSON content type
+        RequestBody requestBody = RequestBody.create(jsonRequestBody, MediaType.parse("application/json"));
+
+        // Create POST request
+        Request request = new Request.Builder()
+                .url("http://localhost:6060/api/products/addToCart")
+                .post(requestBody)
+                .build();
+
+        try {
+            // Execute the request
+            Response response = client.newCall(request).execute();
+            log.info("The response is " + response);
+            if (response.isSuccessful()) {
+                // stock
+                order.setOrderNumber(UUID.randomUUID().toString());
+                order.setOrderTime(Instant.now());
+                var orderItems = orderRequest.getOrderItems().stream().map(this::mapToOrderItemEntity).toList();
+                order.setOrderItems(orderItems);
+                orderRepository.save(order);
+            
+            } else {
+                // Handle error response
+                handleError(response);
             }
-            throw new OrderServiceException(response.getMsg());
+        } catch (IOException e) {
+            // Handle IO Exception
+            e.printStackTrace();
         }
+
         return order.getOrderNumber();
 
     }
 
-    private Mono<? extends Throwable> handleError(ClientResponse response) {
-        log.error("Client error received: {}", response.statusCode());
+    private Mono<? extends Throwable> handleError(Response response) {
+        log.error("Client error received: {}", response.code());
         return Mono.error(new InventoryServiceException("Error in inventory service"));
     }
 

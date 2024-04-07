@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ProductCreateResponse {
+    private Integer id;
     private String name;
     private BigDecimal price;
     private String category;
